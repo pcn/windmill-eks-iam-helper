@@ -1,20 +1,13 @@
 name: release-please
-
 on:
   push:
     branches:
-      - master
-
+      - main
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - name: set package-name
-        run: |
-          echo "package_name=$(echo ${{ github.event.repository.name }} )" >> $GITHUB_ENV
       - uses: google-github-actions/release-please-action@v3
         with:
-          release-type: simple
-          package-name: ${{ env.package_name }}
-          release-type: simple
-
+          release-type: node
+          package-name: windmill-eks-iam-helper
