@@ -1,0 +1,17 @@
+name: release-please
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set package-name
+        run: |
+          echo "package_name=$(echo ${{ github.event.repository.name }} | cut -f2-50 -d-)" >> $GITHUB_ENV
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          package-name: ${{ env.package_name }}
+
