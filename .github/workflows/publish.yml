@@ -1,6 +1,6 @@
 name: Publish to Docker
 on:
-  releases:
+  release:
     types: [published]
 
 env:
