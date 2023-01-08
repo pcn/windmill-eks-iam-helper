@@ -6,4 +6,4 @@ RUN pip install boto3 wmill windmill-api
 COPY scripts/refresh-tokens.py /
 
 
-CMD ["python3", "refresh-tokens.py"]
+CMD ["python3", "/refresh-tokens.py"]
