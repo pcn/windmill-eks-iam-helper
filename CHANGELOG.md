@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.0...v1.0.1) (2023-01-09)
+
+
+### Bug Fixes
+
+* If an execption goes all the way to the top, slow down the restart ([8957921](https://github.com/pcn/windmill-eks-iam-helper/commit/8957921d8b6d78eff0653edc922f6c3fa6fb88d8))
+* loop in main ([7a22d30](https://github.com/pcn/windmill-eks-iam-helper/commit/7a22d308ccd960e9d474b15eed4f0eee16a16787))
+
 ## 1.0.0 (2023-01-08)
 
 
