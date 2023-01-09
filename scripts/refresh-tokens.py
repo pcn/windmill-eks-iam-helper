@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import os
 from typing import List, Dict
 
@@ -10,15 +11,17 @@ import boto3
 # associated windmill instance
 
 def main(groups: list):
-    s = boto3.session.Session(region_name="us-east-2")
-    iam_c = s.client('iam')
-    sts_c = s.client('sts')
-    caller_id = sts_c.get_caller_identity()
-    for g in get_wmill_groups():
-        variable = f"g/{g}/aws"
-        wmill.set_variable(variable, get_token(g))
-        print(f"Set token for group {g}")
-        print(wmill.get_variable(variable))
+    while True:
+        s = boto3.session.Session(region_name="us-east-2")
+        iam_c = s.client('iam')
+        sts_c = s.client('sts')
+        caller_id = sts_c.get_caller_identity()
+        for g in get_wmill_groups():
+            variable = f"g/{g}/aws"
+            wmill.set_variable(variable, get_token(g))
+            print(f"Set token for group {g}")
+            print(wmill.get_variable(variable))
+        time.sleep(60)
 
 
 def get_likely_iam_groups(prefix: str, session: boto3.session.Session) -> Dict[str, dict]:
@@ -56,3 +59,11 @@ def get_aws_token(group: str, session: boto3.session.Session) -> dict[str, str]:
 def get_wmill_workspaces() -> list:
     from windmill_api.api.workspaces import list_workspaces_as_super_admin
     return list_workspaces_as_super_admin.sync(client=wmill.create_client(), workspace=wmill.get_workspace())
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as e:
+        print(f"Exception bubbled up to the top: {str(e)}")
+        time.sleep(2)
