@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.1...v1.0.2) (2023-01-09)
+
+
+### Bug Fixes
+
+* lots of typos in metadata ([d1d69b1](https://github.com/pcn/windmill-eks-iam-helper/commit/d1d69b1363f4d02c75c7531e147a10a915fd77f3))
+
 ## [1.0.1](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.0...v1.0.1) (2023-01-09)
 
 
