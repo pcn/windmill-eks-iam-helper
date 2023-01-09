@@ -11,15 +11,17 @@ import boto3
 # associated windmill instance
 
 def main(groups: list):
-    s = boto3.session.Session(region_name="us-east-2")
-    iam_c = s.client('iam')
-    sts_c = s.client('sts')
-    caller_id = sts_c.get_caller_identity()
-    for g in get_wmill_groups():
-        variable = f"g/{g}/aws"
-        wmill.set_variable(variable, get_token(g))
-        print(f"Set token for group {g}")
-        print(wmill.get_variable(variable))
+    while True:
+        s = boto3.session.Session(region_name="us-east-2")
+        iam_c = s.client('iam')
+        sts_c = s.client('sts')
+        caller_id = sts_c.get_caller_identity()
+        for g in get_wmill_groups():
+            variable = f"g/{g}/aws"
+            wmill.set_variable(variable, get_token(g))
+            print(f"Set token for group {g}")
+            print(wmill.get_variable(variable))
+        time.sleep(60)
 
 
 def get_likely_iam_groups(prefix: str, session: boto3.session.Session) -> Dict[str, dict]:
