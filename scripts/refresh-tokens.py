@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import os
 from typing import List, Dict
 
@@ -56,3 +57,11 @@ def get_aws_token(group: str, session: boto3.session.Session) -> dict[str, str]:
 def get_wmill_workspaces() -> list:
     from windmill_api.api.workspaces import list_workspaces_as_super_admin
     return list_workspaces_as_super_admin.sync(client=wmill.create_client(), workspace=wmill.get_workspace())
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as e:
+        print(f"Exception bubbled up to the top: {str(e)}")
+        time.sleep(2)
