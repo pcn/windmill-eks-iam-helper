@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.2...v1.0.3) (2023-01-09)
+
+
+### Bug Fixes
+
+* Use a PAT to avoid recursive invocation protection ([163bee2](https://github.com/pcn/windmill-eks-iam-helper/commit/163bee2d5522a46b55df5cf687241e70ea462dc7))
+
 ## [1.0.2](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.1...v1.0.2) (2023-01-09)
 
 
