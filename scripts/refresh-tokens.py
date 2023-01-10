@@ -9,10 +9,14 @@ import wmill
 import boto3
 
 from windmill_api.api.workspace import list_workspaces_as_super_admin
-from windmill_api.api.folder import list_folders, get_folder, create_folder, update_folder
 
+from windmill_api.api.folder import list_folders, get_folder, create_folder, update_folder
 from windmill_api.models.create_folder_json_body import CreateFolderJsonBody
-from windmill_api.models.update_folder_json_body import UpdateFolderJsonBody
+
+from windmill_api.api.variable import update_variable, get_variable, create_variable
+from windmill_api.models.update_variable_json_body import UpdateVariableJsonBody
+from windmill_api.models.create_variable_json_body import CreateVariableJsonBody
+
 
 # requires WM_TOKEN to be set in the environment to communicate with the
 # associated windmill instance
@@ -99,14 +103,27 @@ def _list_folders(workspace):
     return res
 
 
+def _get_folder_var(workspace: str, path: str):
+    result = get_variable.sync(workspace=workspace, path=path, client=wmill.create_client())
+    return result
+
+
 def _update_folder(workspace: str, content: dict):
-    """content should be a dictionary, with sub-dicts of <role
-    name>:<credentials> for each of the IAM roles that will be placed
-    in the folder.
+    """Updates a variable in the workspace/secret. content should be a
+    dictionary, with sub-dicts of <role name>:<credentials> for each
+    of the IAM roles that will be placed in the folder.
     """
-    request = None  # XXX I'm unsure what adds content to the folder based on the openapi
-    result = update_folder.sync_detailed(
-        workspace=workspace, name="aws", json_body=json.dumps(content), client=wmill.create_client())
+    folder_name = "aws"
+    var_name = "iam"
+    path = f"/f/{folder_name}/{var_name}"
+    description = f"Temporary IAM role credentials granted to users of the {workspace} workspace."
+    if not _get_folder_var(workspace, path):
+        request = CreateVariableJsonBody(path=path, value=json.dumps(content), is_secret=False, description=description)
+        result = create_variable.sync_detailed(workspace, json_body=request, client=wmill.create_client())
+    else:
+        request = UpdateVariableJsonBody(path=folder_name, value=json.dumps(content), is_secret=False, description=description)
+        result = update_variable.sync_detailed(
+            workspace=workspace, path="/f/aws/iam", json_body=request, client=wmill.create_client())
     print(f"update result is {result}")
 
 
