@@ -85,9 +85,10 @@ def get_likely_iam_roles(prefix: str, session: boto3.session.Session) -> Dict[st
 
 def set_ws_folder(ws_name: str, temp_creds: dict):
     folders = _list_folders(ws_name)
-    if "aws" not in folders:
+    if "aws" not in [f.name for f in folders]:
         _create_folder(ws_name)
     _update_folder(ws_name, temp_creds)
+
 
 def get_wmill_workspace_names() -> set:
     """Provide a set of workspace names that really exist"""
@@ -115,7 +116,7 @@ def _update_folder(workspace: str, content: dict):
     """
     folder_name = "aws"
     var_name = "iam"
-    path = f"/f/{folder_name}/{var_name}"
+    path = f"f/{folder_name}/{var_name}"
     description = f"Temporary IAM role credentials granted to users of the {workspace} workspace."
     if not _get_folder_var(workspace, path):
         request = CreateVariableJsonBody(path=path, value=json.dumps(content), is_secret=False, description=description)
@@ -123,7 +124,7 @@ def _update_folder(workspace: str, content: dict):
     else:
         request = UpdateVariableJsonBody(path=folder_name, value=json.dumps(content), is_secret=False, description=description)
         result = update_variable.sync_detailed(
-            workspace=workspace, path="/f/aws/iam", json_body=request, client=wmill.create_client())
+            workspace=workspace, path=path, json_body=request, client=wmill.create_client())
     print(f"update result is {result}")
 
 
