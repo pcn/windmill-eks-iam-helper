@@ -117,15 +117,18 @@ def _update_folder(workspace: str, content: dict):
     folder_name = "aws"
     var_name = "iam"
     path = f"f/{folder_name}/{var_name}"
+    print(path)
     description = f"Temporary IAM role credentials granted to users of the {workspace} workspace."
     if not _get_folder_var(workspace, path):
-        request = CreateVariableJsonBody(path=path, value=json.dumps(content), is_secret=False, description=description)
+        # request = CreateVariableJsonBody(path=path, value=json.dumps(content), is_secret=False, description=description)
+        request = CreateVariableJsonBody(path=path, value=json.dumps(content), description=description)
         result = create_variable.sync_detailed(workspace, json_body=request, client=wmill.create_client())
     else:
-        request = UpdateVariableJsonBody(path=folder_name, value=json.dumps(content), is_secret=False, description=description)
+        # request = UpdateVariableJsonBody(path=folder_name, value=json.dumps(content), is_secret=False, description=description)
+        request = UpdateVariableJsonBody(path=path, value=json.dumps(content), description=description)
         result = update_variable.sync_detailed(
             workspace=workspace, path=path, json_body=request, client=wmill.create_client())
-    print(f"update result is {result}")
+    print(f"update result is {result} for path {path}")
 
 
 def _create_folder(workspace: str):
