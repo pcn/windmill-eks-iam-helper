@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.4...v1.0.5) (2023-01-11)
+
+
+### Bug Fixes
+
+* add modules the normal way ([41d9df5](https://github.com/pcn/windmill-eks-iam-helper/commit/41d9df52a3f2b645934621c937b88a528a815266))
+* works, adds credentials called "iam" to the "aws" folder ([fda5fef](https://github.com/pcn/windmill-eks-iam-helper/commit/fda5fef133a4578d79fbf7754c0f72090a7c8553))
+
 ## [1.0.4](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.3...v1.0.4) (2023-01-09)
 
 
