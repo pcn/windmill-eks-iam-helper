@@ -33,7 +33,7 @@ def main():
         for ws_name_from_iam in iam_roles.keys():
             if ws_name_from_iam in ws_names:
                 creds = get_wspace_creds(iam_roles[ws_name_from_iam], s)
-                set_ws_folder(ws_name_from_iam, 'aws', creds)
+                set_ws_folder(ws_name_from_iam, creds)
         time.sleep(60)
 
 
@@ -85,6 +85,7 @@ def get_likely_iam_roles(prefix: str, session: boto3.session.Session) -> Dict[st
 
 def set_ws_folder(ws_name: str, temp_creds: dict):
     folders = _list_folders(ws_name)
+    print(f"Temp creds are {temp_creds}")
     if "aws" not in [f.name for f in folders]:
         _create_folder(ws_name)
     _update_folder(ws_name, temp_creds)
@@ -121,11 +122,11 @@ def _update_folder(workspace: str, content: dict):
     description = f"Temporary IAM role credentials granted to users of the {workspace} workspace."
     if not _get_folder_var(workspace, path):
         # request = CreateVariableJsonBody(path=path, value=json.dumps(content), is_secret=False, description=description)
-        request = CreateVariableJsonBody(path=path, value=json.dumps(content), description=description)
+        request = CreateVariableJsonBody(path=path, value=json.dumps(content, default=str), description=description)
         result = create_variable.sync_detailed(workspace, json_body=request, client=wmill.create_client())
     else:
-        # request = UpdateVariableJsonBody(path=folder_name, value=json.dumps(content), is_secret=False, description=description)
-        request = UpdateVariableJsonBody(path=path, value=json.dumps(content), description=description)
+        # request = UpdateVariableJsonBody(path=path, value=json.dumps(content), is_secret=False, description=description)
+        request = UpdateVariableJsonBody(path=path, value=json.dumps(content, default=str), description=description)
         result = update_variable.sync_detailed(
             workspace=workspace, path=path, json_body=request, client=wmill.create_client())
     print(f"update result is {result} for path {path}")
