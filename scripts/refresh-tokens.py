@@ -94,8 +94,11 @@ def set_ws_folder(ws_name: str, temp_creds: dict):
 def get_wmill_workspace_names() -> set:
     """Provide a set of workspace names that really exist"""
     workspace_names = set()
-    for wspace in list_workspaces_as_super_admin.sync(client=wmill.create_client()):
-        workspace_names.add(wspace.id)
+    try:
+        for wspace in list_workspaces_as_super_admin.sync(client=wmill.create_client()):
+            workspace_names.add(wspace.id)
+    except TypeError as te:
+        print(f"No workspaces discovered: {te} (did you fail to connect to the cluster?)")
     return workspace_names
 
 
