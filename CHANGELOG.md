@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.5...v1.0.6) (2023-01-13)
+
+
+### Bug Fixes
+
+* don't die on lack of connection ([964db68](https://github.com/pcn/windmill-eks-iam-helper/commit/964db688c5a53b1dc6824ba3e0fffa56978987bd))
+
 ## [1.0.5](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.4...v1.0.5) (2023-01-11)
 
 
