@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.7](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.6...v1.0.7) (2023-01-13)
+
+
+### Bug Fixes
+
+* and log time on each loop ([dbfc777](https://github.com/pcn/windmill-eks-iam-helper/commit/dbfc77710d9f1861e6503c0053258412ceb46b8b))
+* make the sleep interval a setting, default to 5 minutes ([efbfda5](https://github.com/pcn/windmill-eks-iam-helper/commit/efbfda55a8c68321a211ae555a57bd376b22acfc))
+
 ## [1.0.6](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.5...v1.0.6) (2023-01-13)
 
 
