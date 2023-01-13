@@ -38,7 +38,9 @@ def main():
             if ws_name_from_iam in ws_names:
                 creds = get_wspace_creds(iam_roles[ws_name_from_iam], s)
                 set_ws_folder(ws_name_from_iam, creds)
-        time.sleep(int(os.getenv("WM_IAM_REFRESH_MINUTES", 5)) * 60)
+        sleep_seconds = int(os.getenv("WM_IAM_REFRESH_MINUTES", 5)) * 60
+        print(f"Going to sleep for {sleep_seconds} seconds")
+        time.sleep(sleep_seconds)
 
 
 def get_wspace_creds(roles: dict, s):
