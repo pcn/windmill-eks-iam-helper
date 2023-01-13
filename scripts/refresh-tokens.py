@@ -28,8 +28,10 @@ def main():
     s = boto3.session.Session(region_name="us-east-2")
     caller_id = s.client('sts').get_caller_identity()
     print(f"Started with caller_identity of {caller_id}")
+    print(f"Started with WM_PATH_PREFIX {os.getenv('WM_PATH_PREFIX')}")
     while True:
-        print(f"logging  {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}")
+        nowutc = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"logging  {nowutc}")
         ws_names = get_wmill_workspace_names()
         iam_roles = get_likely_iam_roles(os.getenv("WM_IAM_PREFIX"), s)
         for ws_name_from_iam in iam_roles.keys():
