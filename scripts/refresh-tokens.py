@@ -3,6 +3,7 @@
 import json
 import os
 import time
+import datetime
 from typing import List, Dict
 
 import wmill
@@ -28,13 +29,14 @@ def main():
     caller_id = s.client('sts').get_caller_identity()
     print(f"Started with caller_identity of {caller_id}")
     while True:
+        print(f"logging  {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}")
         ws_names = get_wmill_workspace_names()
         iam_roles = get_likely_iam_roles(os.getenv("WM_IAM_PREFIX"), s)
         for ws_name_from_iam in iam_roles.keys():
             if ws_name_from_iam in ws_names:
                 creds = get_wspace_creds(iam_roles[ws_name_from_iam], s)
                 set_ws_folder(ws_name_from_iam, creds)
-        time.sleep(60)
+        time.sleep(os.getenv("WM_IAM_REFRESH_MINUTES", 5) * 60)
 
 
 def get_wspace_creds(roles: dict, s):
