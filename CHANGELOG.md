@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.7...v1.0.8) (2023-01-13)
+
+
+### Bug Fixes
+
+* type returned by os.getenv is str ([4fca826](https://github.com/pcn/windmill-eks-iam-helper/commit/4fca826f9ddeaa658b581437d8e483a07874c29d))
+
 ## [1.0.7](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.6...v1.0.7) (2023-01-13)
 
 
