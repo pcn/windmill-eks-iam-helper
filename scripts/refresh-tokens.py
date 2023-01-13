@@ -98,7 +98,7 @@ def get_wmill_workspace_names() -> set:
         for wspace in list_workspaces_as_super_admin.sync(client=wmill.create_client()):
             workspace_names.add(wspace.id)
     except TypeError as te:
-        print(f"No workspaces discovered: {te} (did you fail to connect to the cluster?)")
+        print(f"No workspaces discovered: {te} (did you fail to connect to the service?)")
     return workspace_names
 
 
