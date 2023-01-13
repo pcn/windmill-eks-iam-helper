@@ -23,7 +23,7 @@ from windmill_api.models.create_variable_json_body import CreateVariableJsonBody
 # associated windmill instance
 # requires WM_IAM_PATH_PREFIX to be set in the environment to specify the
 # windmill roles' IAM path, e.g. '/windmill-stage/'
-
+# WM_IAM_EXCEPT_TIMEOUT_SEC can provide a longer delay to troubleshoot the pod
 def main():
     s = boto3.session.Session(region_name="us-east-2")
     caller_id = s.client('sts').get_caller_identity()
@@ -154,5 +154,5 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         print(f"Exception bubbled up to the top: {str(e)}")
-        time.sleep(2)
+        time.sleep(int(os.getenv("WM_IAM_EXCEPT_TIMEOUT_SEC", 5)))
         raise
