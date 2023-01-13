@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.9](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.8...v1.0.9) (2023-01-13)
+
+
+### Bug Fixes
+
+* log the sleeping ([02a21fd](https://github.com/pcn/windmill-eks-iam-helper/commit/02a21fdeeb01a82aff841980367a1708bbcfe0e9))
+
 ## [1.0.8](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.7...v1.0.8) (2023-01-13)
 
 
