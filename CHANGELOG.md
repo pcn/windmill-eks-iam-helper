@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.9...v1.0.10) (2023-01-13)
+
+
+### Bug Fixes
+
+* Allow increating timeouts to troubleshoot a problematic pod ([8914b71](https://github.com/pcn/windmill-eks-iam-helper/commit/8914b71a932d11ff070155fbfaf714174d34a62f))
+
 ## [1.0.9](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.8...v1.0.9) (2023-01-13)
 
 
