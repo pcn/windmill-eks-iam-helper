@@ -21,19 +21,19 @@ from windmill_api.models.create_variable_json_body import CreateVariableJsonBody
 
 # requires WM_TOKEN to be set in the environment to communicate with the
 # associated windmill instance
-# requires WM_IAM_PREFIX to be set in the environment to specify the
+# requires WM_IAM_PATH_PREFIX to be set in the environment to specify the
 # windmill roles' IAM path, e.g. '/windmill-stage/'
 
 def main():
     s = boto3.session.Session(region_name="us-east-2")
     caller_id = s.client('sts').get_caller_identity()
     print(f"Started with caller_identity of {caller_id}")
-    print(f"Started with WM_PATH_PREFIX {os.getenv('WM_PATH_PREFIX')}")
+    print(f"Started with WM_IAM_PATH_PREFIX {os.getenv('WM_IAM_PATH_PREFIX')}")
     while True:
         nowutc = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         print(f"logging  {nowutc}")
         ws_names = get_wmill_workspace_names()
-        iam_roles = get_likely_iam_roles(os.getenv("WM_IAM_PREFIX"), s)
+        iam_roles = get_likely_iam_roles(os.getenv("WM_IAM_PATH_PREFIX"), s)
         for ws_name_from_iam in iam_roles.keys():
             if ws_name_from_iam in ws_names:
                 creds = get_wspace_creds(iam_roles[ws_name_from_iam], s)
