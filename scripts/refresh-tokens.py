@@ -3,6 +3,7 @@
 import json
 import os
 import time
+import datetime
 from typing import List, Dict
 
 import wmill
@@ -28,6 +29,7 @@ def main():
     caller_id = s.client('sts').get_caller_identity()
     print(f"Started with caller_identity of {caller_id}")
     while True:
+        print(f"logging  {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}")
         ws_names = get_wmill_workspace_names()
         iam_roles = get_likely_iam_roles(os.getenv("WM_IAM_PREFIX"), s)
         for ws_name_from_iam in iam_roles.keys():
