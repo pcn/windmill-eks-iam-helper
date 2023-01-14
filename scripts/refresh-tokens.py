@@ -161,5 +161,5 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         print(f"Exception bubbled up to the top: {str(e)}")
-        time.sleep(2)
+        time.sleep(int(os.getenv("WM_IAM_EXCEPT_TIMEOUT_SEC", 5)))
         raise
