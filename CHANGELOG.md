@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.10...v1.0.11) (2023-01-14)
+
+
+### Bug Fixes
+
+* set a default BASE_INTERNAL_URL if none is set ([edea9f6](https://github.com/pcn/windmill-eks-iam-helper/commit/edea9f679fc01ccb38111def93fe383ab399fcfa))
+
 ## [1.0.10](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.9...v1.0.10) (2023-01-13)
 
 
