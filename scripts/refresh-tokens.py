@@ -19,14 +19,21 @@ from windmill_api.models.update_variable_json_body import UpdateVariableJsonBody
 from windmill_api.models.create_variable_json_body import CreateVariableJsonBody
 
 
-# requires WM_TOKEN to be set in the environment to communicate with the
-# associated windmill instance
-# requires WM_IAM_PATH_PREFIX to be set in the environment to specify the
-# windmill roles' IAM path, e.g. '/windmill-stage/'
-# WM_IAM_EXCEPT_TIMEOUT_SEC can provide a longer delay to troubleshoot the pod
+# requires
+# - BASE_INTERNAL_URL to be the URL (http/https) to communicate
+#   with windmill. I think it will always be http://windmill-app in the same namespace.
+#   the wmill client uses this directly
+# - WM_TOKEN to be set in the environment to authenciate with the
+#   associated windmill instance
+# - WM_IAM_PATH_PREFIX must be set in the environment to specify the
+#   windmill roles' IAM path, e.g. '/windmill-stage/'
+
 def main():
     s = boto3.session.Session(region_name="us-east-2")
     caller_id = s.client('sts').get_caller_identity()
+
+    os.environ["BASE_INTERNAL_URL"] = os.getenv("BASE_INTERNAL_URL", "http://windmill-app:8000")
+    print(f"Started with BASE_INTERNAL_URL as  {os.getenv('BASE_INTERNAL_URL')}")
     print(f"Started with caller_identity of {caller_id}")
     print(f"Started with WM_IAM_PATH_PREFIX {os.getenv('WM_IAM_PATH_PREFIX')}")
     while True:
