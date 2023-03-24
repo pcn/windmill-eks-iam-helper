@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.12](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.11...v1.0.12) (2023-03-24)
+
+
+### Bug Fixes
+
+* breaks when missing this now ([411003e](https://github.com/pcn/windmill-eks-iam-helper/commit/411003edb07965cdb94f6a9d47ca338edf9e83b8))
+
 ## [1.0.11](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.10...v1.0.11) (2023-01-14)
 
 
