@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.12](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.11...v1.0.12) (2023-03-24)
+
+
+### Bug Fixes
+
+* breaks when missing this now ([411003e](https://github.com/pcn/windmill-eks-iam-helper/commit/411003edb07965cdb94f6a9d47ca338edf9e83b8))
+* restore default=str behavior ([aa70dec](https://github.com/pcn/windmill-eks-iam-helper/commit/aa70dec5802b4c39b0662b5f8d4e5f711a751334))
+* slightly different calls based on create or update ([e43c53f](https://github.com/pcn/windmill-eks-iam-helper/commit/e43c53f41822a39fc8be16f0eef0d5107339bec5))
+
 ## [1.0.11](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.10...v1.0.11) (2023-01-14)
 
 
