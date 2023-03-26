@@ -93,30 +93,16 @@ any work to leverage automatically rotated secrets with limited permissions.
 An example could be a windmill script like this from the `infra` workspace:
 
 ```python
-import os
-import wmill
 import boto3
-import json
 
-def main(region_name: str):
-    """A main function is required for the script to be able to accept arguments.
-    Types are recommended."""
-    creds = json.loads(wmill.get_variable("f/aws/iam"))['ec2_ro']['Credentials']
-    print(f"creds are {creds}")
-    s = boto3.session.Session(
-      region_name=region_name, 
-      aws_access_key_id=creds['AccessKeyId'], 
-      aws_secret_access_key=creds['SecretAccessKey'], 
-      aws_session_token=creds['SessionToken'])
-    reservations = s.client('ec2').describe_instances()['Reservations']
-    instances = list()
-    for r in reservations:
-      for i in r['Instances']:
-        instances.append(i['InstanceId'])
-    return {region_name: instances} 
-    # the return value is then parsed and can be retrieved by other scripts conveniently
+def main(region="us-east-2"):
+    creds = wmill.get_resource("f/aws_iam/ec2_ro")
+    s = boto3.session.Session(creds["AccessKeyId"], creds["SecretAccessKey"], creds["SessionToken"], region)
+    c = s.client('ec2')
+    instances = dict()
+    for r in c.describe_instances()["Reservations"]:
+        for i in r["Instances"]:
+            instances[i["InstanceId"]] = i
+        
+    return instances
 ```
-
-The temporary (expiring) credentials for the `ec2_ro` iam role is provided in the `f/aws/iam` variable as a json blob which is extracted and used 
-to authenticate and return the instance IDs in a region.
-
