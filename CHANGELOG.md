@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.1.1...v1.1.2) (2023-03-26)
+
+
+### Bug Fixes
+
+* try to debug this permissins error ([a0effab](https://github.com/pcn/windmill-eks-iam-helper/commit/a0effab6cc5c74dfbfa6f5a00c2353b25d894962))
+
 ## [1.1.1](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.1.0...v1.1.1) (2023-03-26)
 
 
