@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.1.3...v1.1.4) (2023-03-26)
+
+
+### Bug Fixes
+
+* try just doing it on the release tag ([03937b4](https://github.com/pcn/windmill-eks-iam-helper/commit/03937b4fc4e2efe554dfdfad90bb17d3f6d4ed78))
+
 ## [1.1.3](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.1.2...v1.1.3) (2023-03-26)
 
 
