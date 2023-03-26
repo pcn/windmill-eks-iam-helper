@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.12...v1.1.0) (2023-03-26)
+
+
+### Features
+
+* work on using resources intead of one variable ([#49](https://github.com/pcn/windmill-eks-iam-helper/issues/49)) ([eebb0d4](https://github.com/pcn/windmill-eks-iam-helper/commit/eebb0d440a7b442f5e6296817d4daf502e35f916))
+
 ## [1.0.12](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.11...v1.0.12) (2023-03-24)
 
 
