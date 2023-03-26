@@ -1,11 +1,8 @@
 name: Publish to Docker
 on:
-  workflow_run:
-    workflows:
-      - release-please
-    types:
-      - completed
-
+  push:
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
@@ -29,8 +26,6 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v2
-        tags: |
-          type=semver,pattern={{raw}}
         with:
           images: |
             ghcr.io/${{ github.repository }}
