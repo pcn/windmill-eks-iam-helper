@@ -46,9 +46,9 @@ RES_SCHEMA = {
             "type": "string",
             "description": "The string representation of the time these credentials expire",
         },
-        "type": "object",
-        "required": ["role_name", "AccessKeyId", "SecretAccessKey", "SessionToken", "Expiration"],
-    }
+    },
+    "type": "object",
+    "required": ["role_name", "AccessKeyId", "SecretAccessKey", "SessionToken", "Expiration"],
 }
 
 
@@ -162,7 +162,8 @@ def create_folder_resource_type(workspace: str):
     json_body = CreateResourceTypeJsonBody(
         name=RES_TYPE,
         workspace_id=workspace,
-        schema=json.dumps(RES_SCHEMA), description="AWS IAM credentials to assume roles available to users in this workspace")
+        schema=json.dumps(RES_SCHEMA),
+        description="AWS IAM credentials to assume roles available to users in this workspace")
     create_resource_type.sync_detailed(workspace, json_body=body, client=wmill.create_client())
 
 
