@@ -14,10 +14,11 @@ from windmill_api.api.workspace import list_workspaces_as_super_admin
 from windmill_api.api.folder import list_folders, get_folder, create_folder, update_folder
 from windmill_api.models.create_folder_json_body import CreateFolderJsonBody
 
-from windmill_api.api.resource import update_resource, get_resource, create_resource, create_resource_type, exists_resource
+from windmill_api.api.resource import update_resource, get_resource, create_resource, create_resource_type, exists_resource, list_resource_type, update_resource_type
 from windmill_api.models.update_resource_json_body import UpdateResourceJsonBody
 from windmill_api.models.create_resource_json_body import CreateResourceJsonBody
 from windmill_api.models.create_resource_type_json_body import CreateResourceTypeJsonBody
+from windmill_api.models.update_resource_type_json_body import UpdateResourceTypeJsonBody
 
 
 # Let's use "iam_creds" as the schema type name
@@ -77,6 +78,7 @@ def main():
         iam_roles = get_likely_iam_roles(os.getenv("WM_IAM_PATH_PREFIX"), s)
         for ws_name_from_iam in iam_roles.keys():
             if ws_name_from_iam in ws_names:
+                create_folder_resource_type(ws_name_from_iam)
                 creds = get_wspace_creds(iam_roles[ws_name_from_iam], s)
                 set_ws_folder(ws_name_from_iam, creds)
         sleep_seconds = int(os.getenv("WM_IAM_REFRESH_MINUTES", 5)) * 60
@@ -156,15 +158,35 @@ def _list_folders(workspace):
 
 
 def create_folder_resource_type(workspace: str):
-    """Create a new resource's schema in a workspace to contain IAM permissions"""
+    """Create a new resource's schema in a workspace to contain IAM permissions, if it doesn't exist or if it
+    doesn't match our expected schema"""
+
     global RES_SCHEMA
     global RES_TYPE
-    json_body = CreateResourceTypeJsonBody(
-        name=RES_TYPE,
-        workspace_id=workspace,
-        schema=RES_SCHEMA,
-        description="AWS IAM credentials to assume roles available to users in this workspace")
-    create_resource_type.sync_detailed(workspace, json_body=json_body, client=wmill.create_client())
+    existing_types = list_resource_type.sync(workspace, client=wmill.create_client())
+    update_needed = False
+    create_needed = True
+    for restype in existing_types:
+        if restype.name == RES_TYPE:
+            if restype.schema == RES_SCHEMA:
+                create_needed = False
+            else:
+                update_type = True
+
+    if create_needed is True:
+        json_body = CreateResourceTypeJsonBody(
+            name=RES_TYPE,
+            workspace_id=workspace,
+            schema=RES_SCHEMA,
+            description="AWS IAM credentials to assume roles available to users in this workspace")
+        create_resource_type.sync_detailed(workspace, json_body=json_body, client=wmill.create_client())
+    elif update_needed is True:
+        path = RES_TYPE
+        json_body = UpdateResourceTypeJsonBody(
+            schema=RES_SCHEMA,
+            description="AWS IAM credentials to assume roles available to users in this workspace")
+        update_resource_type.sync_detailed(workspace, path=path, json_body=json_body, client=wmill.create_client())
+
 
 
 def _get_folder_resource(workspace: str, path: str):
