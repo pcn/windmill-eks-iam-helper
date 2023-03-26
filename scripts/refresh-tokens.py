@@ -135,7 +135,7 @@ def set_ws_folder(ws_name: str, temp_creds: dict):
     print(f"Temp creds are {temp_creds}")
     if RES_FOLDER not in [f.name for f in folders]:
         _create_folder(ws_name)
-    _update_folder(ws_name, temp_creds)
+    _update_folder_resource(ws_name, temp_creds)
 
 
 def get_wmill_workspace_names() -> set:
@@ -162,9 +162,9 @@ def create_folder_resource_type(workspace: str):
     json_body = CreateResourceTypeJsonBody(
         name=RES_TYPE,
         workspace_id=workspace,
-        schema=json.dumps(RES_SCHEMA),
+        schema=RES_SCHEMA,
         description="AWS IAM credentials to assume roles available to users in this workspace")
-    create_resource_type.sync_detailed(workspace, json_body=body, client=wmill.create_client())
+    create_resource_type.sync_detailed(workspace, json_body=json_body, client=wmill.create_client())
 
 
 def _get_folder_resource(workspace: str, path: str):
@@ -192,10 +192,10 @@ def _update_folder_resource(workspace: str, content: dict):
         }
         print(value)
         if not _get_folder_resource(workspace, path):  # XXX make sure type exists first
-            request = CreateResourceJsonBody(path=path, resource_type=RES_TYPE, value=json.dumps(value, default=str), description=description)
+            request = CreateResourceJsonBody(path=path, resource_type=RES_TYPE, value=json.loads(json.dumps(value, default=str)), description=description)
             result = create_resource.sync_detailed(workspace, json_body=request, client=wmill.create_client())
         else:
-            request = UpdateResourceJsonBody(path=path, value=json.dumps(value, default=str), description=description)
+            request = UpdateResourceJsonBody(path=path, value=json.loads(json.dumps(value, default=str)), description=description)
             result = update_resource.sync_detailed(
                 workspace=workspace, path=path, json_body=request, client=wmill.create_client())
     print(f"update result is {result} for path {path}")
