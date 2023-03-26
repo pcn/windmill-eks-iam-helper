@@ -28,7 +28,9 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v2
+        tags: |
+          type=semver,pattern={{raw}}
         with:
           images: |
             ghcr.io/${{ github.repository }}
@@ -38,5 +40,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ github.ref_name }}
-          labels: ${{ github.ref_name }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
