@@ -14,9 +14,43 @@ from windmill_api.api.workspace import list_workspaces_as_super_admin
 from windmill_api.api.folder import list_folders, get_folder, create_folder, update_folder
 from windmill_api.models.create_folder_json_body import CreateFolderJsonBody
 
-from windmill_api.api.variable import update_variable, get_variable, create_variable
-from windmill_api.models.update_variable_json_body import UpdateVariableJsonBody
-from windmill_api.models.create_variable_json_body import CreateVariableJsonBody
+from windmill_api.api.resource import update_resource, get_resource, create_resource, create_resource_type, exists_resource
+from windmill_api.models.update_resource_json_body import UpdateResourceJsonBody
+from windmill_api.models.create_resource_json_body import CreateResourceJsonBody
+from windmill_api.models.create_resource_type_json_body import CreateResourceTypeJsonBody
+
+
+# Let's use "iam_creds" as the schema type name
+RES_FOLDER = "aws_iam"
+RES_TYPE = "iam_creds"
+RES_SCHEMA = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+        "role_name": {
+            "type": "string",
+            "description": "name of the IAM role",
+        },
+        "AccessKeyId": {
+            "type": "string",
+            "description": "the ephermeral AWS access key ID",
+        },
+        "SecretAccessKey": {
+            "type": "string",
+            "description": "The ephemeral AWS secret access key",
+        },
+        "SessionToken": {
+            "type": "string",
+            "description": "The ephemeral session token for the role credentials",
+        },
+        "Expiration": {
+            "type": "string",
+            "description": "The string representation of the time these credentials expire",
+        },
+        "type": "object",
+        "required": ["role_name", "AccessKeyId", "SecretAccessKey", "SessionToken", "Expiration"],
+    }
+}
+
 
 
 # requires
@@ -99,7 +133,7 @@ def get_likely_iam_roles(prefix: str, session: boto3.session.Session) -> Dict[st
 def set_ws_folder(ws_name: str, temp_creds: dict):
     folders = _list_folders(ws_name)
     print(f"Temp creds are {temp_creds}")
-    if "aws" not in [f.name for f in folders]:
+    if RES_FOLDER not in [f.name for f in folders]:
         _create_folder(ws_name)
     _update_folder(ws_name, temp_creds)
 
@@ -121,36 +155,54 @@ def _list_folders(workspace):
     return res
 
 
-def _get_folder_var(workspace: str, path: str):
-    result = get_variable.sync(workspace=workspace, path=path, client=wmill.create_client())
+def create_folder_resource_type(workspace: str):
+    """Create a new resource's schema in a workspace to contain IAM permissions"""
+    global RES_SCHEMA
+    global RES_TYPE
+    json_body = CreateResourceTypeJsonBody(
+        name=RES_TYPE,
+        workspace_id=workspace,
+        schema=json.dumps(RES_SCHEMA), description="AWS IAM credentials to assume roles available to users in this workspace")
+    create_resource_type.sync_detailed(workspace, json_body=body, client=wmill.create_client())
+
+
+def _get_folder_resource(workspace: str, path: str):
+    result = get_resource.sync(workspace=workspace, path=path, client=wmill.create_client())
     return result
 
 
-def _update_folder(workspace: str, content: dict):
-    """Updates a variable in the workspace/secret. content should be a
-    dictionary, with sub-dicts of <role name>:<credentials> for each
-    of the IAM roles that will be placed in the folder.
+def _update_folder_resource(workspace: str, content: dict):
+    """Updates a resource in the workspace/secret. content should be a
+    dictionary, that match the schema in RES_SCHEMA to create
+    assumable IAM roles
     """
-    folder_name = "aws"
-    var_name = "iam"
-    path = f"f/{folder_name}/{var_name}"
-    print(path)
+    global RES_TYPE
+    global RES_FOLDER
+
     description = f"Temporary IAM role credentials granted to users of the {workspace} workspace."
-    if not _get_folder_var(workspace, path):
-        request = CreateVariableJsonBody(path=path, value=json.dumps(content, default=str), is_secret=False, description=description)
-        result = create_variable.sync_detailed(workspace, json_body=request, client=wmill.create_client())
-    else:
-        # Must create with the is_secret flag set, and must update without it set that's not changeable after it's created
-        request = UpdateVariableJsonBody(path=path, value=json.dumps(content, default=str), description=description)
-        result = update_variable.sync_detailed(
-            workspace=workspace, path=path, json_body=request, client=wmill.create_client())
+    for role_name, vals in content.items():
+        path = f"f/{RES_FOLDER}/{role_name}"
+        value = {
+            "role_name": role_name,
+            "AccessKeyId": vals["Credentials"]["AccessKeyId"],
+            "SecretAccessKey": vals["Credentials"]["SecretAccessKey"],
+            "SessionToken": vals["Credentials"]["SessionToken"],
+            "Expiration": vals["Credentials"]["Expiration"],
+        }
+        print(value)
+        if not _get_folder_resource(workspace, path):  # XXX make sure type exists first
+            request = CreateResourceJsonBody(path=path, resource_type=RES_TYPE, value=json.dumps(value, default=str), description=description)
+            result = create_resource.sync_detailed(workspace, json_body=request, client=wmill.create_client())
+        else:
+            request = UpdateResourceJsonBody(path=path, value=json.dumps(value, default=str), description=description)
+            result = update_resource.sync_detailed(
+                workspace=workspace, path=path, json_body=request, client=wmill.create_client())
     print(f"update result is {result} for path {path}")
 
 
-def _create_folder(workspace: str):
+def _create_folder(workspace: str, folder=RES_FOLDER):
     """If it's not there, create it"""
-    request = CreateFolderJsonBody(name="aws")
-
+    request = CreateFolderJsonBody(name=folder)
     result = create_folder.sync_detailed(workspace=workspace, json_body=request, client=wmill.create_client())
     print(f"create result is {result}")
 
