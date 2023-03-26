@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.1.0...v1.1.1) (2023-03-26)
+
+
+### Bug Fixes
+
+* update changelog and fix tagging the image ([728d155](https://github.com/pcn/windmill-eks-iam-helper/commit/728d1556d56e624ed15df42810f8e323417a0a86))
+
 ## [1.1.0](https://github.com/pcn/windmill-eks-iam-helper/compare/v1.0.12...v1.1.0) (2023-03-26)
 
 
